@@ -6,7 +6,7 @@
         <li class="contact-list__contact" @click="selectedContact = contact" v-for="contact in sortedContacts" :key="contact.id">
           <p> {{ contact.firstname }} {{ contact.lastname }} </p>
         </li>
-        <button class="contact-editor__btn">Add contact</button>
+        <button class="contact-editor__btn" @click="editNewContact">Add contact</button>
       </ul>
 
       <transition name="expand">
@@ -73,6 +73,7 @@ export default {
   },
   data () {
     return {
+      editingNewContact: false,
       selectedContact: null,
       contacts: [
         { id: 1,
@@ -109,6 +110,18 @@ export default {
     },
     addPhoneNumber () {
       this.selectedContact.phoneNumbers.push({number: '', type: ''})
+    },
+    editNewContact () {
+      const newContact = {
+          firstname: '',
+          lastname: '',
+          birthdate: null,
+          emails: [''],
+          addresses: [],
+          phoneNumbers: []
+        }
+      this.editingNewContact = true
+      this.selectedContact = newContact
     },
     syncContact () {
     }
