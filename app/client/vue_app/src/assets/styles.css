@@ -3,7 +3,11 @@
 @tailwind utilities;
 
 .contact-editor {
-  @apply .w-2/3;
+  @apply .invisible .border .p-1;
+}
+
+.contact-editor--enabled {
+  @apply .visible .w-2/3;
 }
 
 .contact-editor__input {
@@ -43,5 +47,25 @@
 }
 
 .contact-list {
-  @apply .w-1/3;
+  @apply .w-1/3 .list-reset .text-xl;
+}
+
+.contact-list--expanded {
+  @apply .w-full;
+}
+
+.contact-list__contact {
+  @apply .border p-8;
+}
+
+.contact-list__contact:hover {
+  @apply .bg-blue-lighter;
+}
+
+.contact-list-enter-active, .contact-list-leave-active {
+  transition: opacity 2s;
+}
+
+.contact-list-enter, .contact-list-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
