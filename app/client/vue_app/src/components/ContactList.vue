@@ -2,28 +2,19 @@
   <div class="max-w-lg mx-auto rounded h-screen">
     <div class="flex">
 
-      <ul class="contact-list" :class="{'contact-list--expanded': !selectedContact}">
+      <ul class="contact-list">
         <li class="contact-list__contact" @click="selectedContact = contact" v-for="contact in sortedContacts" :key="contact.id">
           <p> {{ contact.firstname }} {{ contact.lastname }} </p>
         </li>
         <button class="contact-editor__btn">Add contact</button>
       </ul>
 
-      <transition name="contact-editor">
-        <div class="contact-editor" :class="{'contact-editor--enabled': selectedContact}" v-if="selectedContact">
+      <transition name="expand">
+        <div class="contact-editor" v-if="selectedContact">
           <div class="contact-editor__data-section">
             <input class="contact-editor__input" placeholder="First name" v-model="selectedContact.firstname" />
             <input class="contact-editor__input" placeholder="Last name"  v-model="selectedContact.lastname" />
             <datepicker input-class="contact-editor__input" placeholder="birthdate" v-model="selectedContact.birthdate"></datepicker>
-          </div>
-
-          <div class="contact-editor__data-section">
-            <h4>Emails</h4>
-            <div class="mb-1" v-for="(email, index) in selectedContact.emails" :key="`email-${index}`">
-              <input class="contact-editor__input" :placeholder="`Email ${index+1}`" v-model="selectedContact.emails[index]" />
-              <button class="contact-editor__btn contact-editor__btn--delete" v-if="emailCount > 1" @click="selectedContact.emails.splice(index, 1)">delete</button>
-            </div>
-            <button class="contact-editor__btn contact-editor__btn--add-data" @click="addEmail">Add Email</button>
           </div>
 
           <div class="contact-editor__data-section">
@@ -49,11 +40,22 @@
                   <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
                 </div>
               </div>
-              <button class="contact-editor__btn contact-editor__btn--delete" @click="selectedContact.phoneNumbers.splice(index, 1)">delete</button>
+              <button class="contact-editor__btn contact-editor__btn--delete" v-if="phoneNumberCount > 1" @click="selectedContact.phoneNumbers.splice(index, 1)">delete</button>
             </div>
             <button class="contact-editor__btn contact-editor__btn--add-data" @click="addPhoneNumber">Add phone</button>
           </div>
+
+          <div class="contact-editor__data-section">
+            <h4>Emails</h4>
+            <div class="mb-1" v-for="(email, index) in selectedContact.emails" :key="`email-${index}`">
+              <input class="contact-editor__input" :placeholder="`Email ${index+1}`" v-model="selectedContact.emails[index]" />
+              <button class="contact-editor__btn contact-editor__btn--delete" v-if="emailCount > 1" @click="selectedContact.emails.splice(index, 1)">delete</button>
+            </div>
+            <button class="contact-editor__btn contact-editor__btn--add-data" @click="addEmail">Add Email</button>
+          </div>
+
           <hr>
+
           <button class="contact-editor__btn" @click="syncContact">Save</button>
         </div>
       </transition>
@@ -114,6 +116,9 @@ export default {
   computed: {
     emailCount () {
       return this.selectedContact.emails.length
+    },
+    phoneNumberCount () {
+      return this.selectedContact.phoneNumbers.length
     },
     sortedContacts () {
       return this.contacts.slice(0).sort((c1, c2) => {
