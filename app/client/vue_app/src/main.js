@@ -7,6 +7,8 @@ import store from './store'
 
 import './filters'
 
+import './assets/styles.css'
+
 Vue.config.productionTip = false
 
 new Vue({
