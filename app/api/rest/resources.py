@@ -10,23 +10,21 @@ from flask_restplus import Api
 from app.api.rest.base import BaseResource, SecureResource
 from app.api import api_rest
 
+from ...models import Contact, db
 
-@api_rest.route('/resource/<string:resource_id>')
-class ResourceOne(BaseResource):
+@api_rest.route('/contacts')
+class ContactList(BaseResource):
     """ Sample Resource Class """
 
-    def get(self, resource_id):
-        timestamp = datetime.utcnow().isoformat()
-        return {'timestamp': timestamp}
-
-    def post(self, resource_id):
+    def post(self):
         json_payload = request.json
-        return {'timestamp': json_payload}, 201
 
+        contact = Contact(firstname=json_payload["firstname"], lastname=json_payload["lastname"])
+        db.session.add(contact)
+        db.session.commit()
 
-@api_rest.route('/secure-resource/<string:resource_id>')
-class SecureResourceOne(SecureResource):
+        json_payload["id"] = contact.id
 
-    def get(self, resource_id):
-        timestamp = datetime.utcnow().isoformat()
-        return {'timestamp': timestamp}
+        return {'contact': json_payload}, 201
+
+# @api_rest.route('/contacts/<string:resource_id>')

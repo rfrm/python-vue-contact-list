@@ -113,13 +113,13 @@ export default {
     },
     editNewContact () {
       const newContact = {
-          firstname: '',
-          lastname: '',
-          birthdate: null,
-          emails: [''],
-          addresses: [],
-          phoneNumbers: []
-        }
+        firstname: '',
+        lastname: '',
+        birthdate: null,
+        emails: [''],
+        addresses: [],
+        phoneNumbers: []
+      }
       this.editingNewContact = true
       this.selectedContact = newContact
     },

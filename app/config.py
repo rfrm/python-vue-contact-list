@@ -19,6 +19,8 @@ class Development(Config):
     DEBUG = True
     PRODUCTION = False
     SECRET_KEY = 'SuperSecretKey'
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_DATABASE_URI = 'postgresql:///contact_list'
 
 
 class Production(Config):
