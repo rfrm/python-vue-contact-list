@@ -5,25 +5,21 @@ class Contact(db.Model):
     firstname = db.Column(db.Text)
     lastname = db.Column(db.Text)
 
+    emails = db.relationship('Email', cascade="all,delete-orphan")
+    addresses = db.relationship('Address', cascade="all,delete-orphan")
+    phone_numbers = db.relationship('PhoneNumber', cascade="all,delete-orphan")
+
 
 class Email(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.Text)
     contact_id = db.Column(db.Integer, db.ForeignKey('contact.id'))
-    contact = db.relationship('Contact',
-            single_parent=True,
-            backref=db.backref('emails'),
-            cascade="all, delete-orphan")
 
 
 class Address(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     address = db.Column(db.Text)
     contact_id = db.Column(db.Integer, db.ForeignKey('contact.id'))
-    contact = db.relationship('Contact',
-            single_parent=True,
-            backref=db.backref('addresses'),
-            cascade="all, delete-orphan")
 
 
 class PhoneNumber(db.Model):
@@ -31,7 +27,3 @@ class PhoneNumber(db.Model):
     phone_number = db.Column(db.Text)
     phone_type = db.Column(db.Text)
     contact_id = db.Column(db.Integer, db.ForeignKey('contact.id'))
-    contact = db.relationship('Contact',
-            single_parent=True,
-            backref=db.backref('phone_numbers'),
-            cascade="all, delete-orphan")

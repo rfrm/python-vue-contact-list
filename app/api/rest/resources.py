@@ -3,6 +3,8 @@ REST API Resource Routing
 http://flask-restplus.readthedocs.io
 """
 
+import pdb
+
 from datetime import datetime
 from flask import request
 from flask_restplus import Api
@@ -10,21 +12,18 @@ from flask_restplus import Api
 from app.api.rest.base import BaseResource, SecureResource
 from app.api import api_rest
 
-from ...models import Contact, db
+from ...models import db
+from ...schemas import ContactSchema
 
 @api_rest.route('/contacts')
 class ContactList(BaseResource):
-    """ Sample Resource Class """
-
     def post(self):
+        schema = ContactSchema()
         json_payload = request.json
-
-        contact = Contact(firstname=json_payload["firstname"], lastname=json_payload["lastname"])
+        contact = schema.load(json_payload).data
         db.session.add(contact)
         db.session.commit()
-
-        json_payload["id"] = contact.id
-
-        return {'contact': json_payload}, 201
+        serialized = schema.dump(contact)
+        return {'contact': serialized}, 201
 
 # @api_rest.route('/contacts/<string:resource_id>')
