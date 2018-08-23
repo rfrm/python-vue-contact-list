@@ -40,17 +40,22 @@ class Contact(db.Model):
                                            phone_type=number['phone_type']) for number in phone_numbers]
 
 
-
 class Email(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.Text)
     contact_id = db.Column(db.Integer, db.ForeignKey('contact.id'))
+
+    def __repr__(self):
+        return str(self.email)
 
 
 class Address(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     address = db.Column(db.Text)
     contact_id = db.Column(db.Integer, db.ForeignKey('contact.id'))
+
+    def __repr__(self):
+        return str(self.address)
 
 
 class PhoneNumber(db.Model):

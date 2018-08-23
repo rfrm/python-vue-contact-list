@@ -111,7 +111,7 @@ export default {
         lastname: '',
         birthdate: null,
         emails: [''],
-        addresses: [],
+        addresses: [''],
         phone_numbers: []
       }
       this.editingNewContact = true
@@ -127,11 +127,17 @@ export default {
           this.contacts.push(data.contact)
           this.cancelEdit()
         })
+        .catch(({response}) => {
+          alert(response.data.errors)
+        })
     },
     updateContact () {
       backend.updateContact(this.selectedContact)
         .then(() => {
           this.cancelEdit()
+        })
+        .catch(({response}) => {
+          alert(response.data.errors)
         })
     },
     deleteContact () {
