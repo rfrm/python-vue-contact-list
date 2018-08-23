@@ -7,7 +7,7 @@
 }
 
 .contact-editor__input {
-  @apply .shadow .appearance-none .border .rounded .p-1 .mr-1 .text-grey-darker .leading-tight;
+  @apply .shadow .appearance-none .border .rounded .p-1 .mb-1 .mr-1 .text-grey-darker .leading-tight;
 }
 
 .contact-editor__btn {
@@ -55,7 +55,7 @@
 }
 
 .contact-list__contact:hover {
-  @apply .bg-blue-lighter;
+  @apply .bg-blue-lighter .cursor-pointer;
 }
 
 .expand-enter, .expand-leave {
