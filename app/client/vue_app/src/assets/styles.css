@@ -42,6 +42,10 @@
   @apply .mb-8;
 }
 
+.contact-editor__validation-error-msg {
+  @apply .text-xs .text-red;
+}
+
 .contact-list {
   @apply .list-reset .text-xl .flex-grow;
 }
