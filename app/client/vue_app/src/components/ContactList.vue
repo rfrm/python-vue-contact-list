@@ -3,7 +3,7 @@
     <div class="flex">
 
       <ul class="contact-list">
-        <li class="contact-list__contact" @click="selectedContact = contact" v-for="contact in sortedContacts" :key="contact.id">
+        <li class="contact-list__contact" @click="editContact(contact)" v-for="contact in sortedContacts" :key="contact.id">
           <p> {{ contact.firstname }} {{ contact.lastname }} </p>
         </li>
         <button class="contact-editor__btn" @click="editNewContact">Add contact</button>
@@ -54,10 +54,15 @@
             <button class="contact-editor__btn contact-editor__btn--add-data" @click="addEmail">Add Email</button>
           </div>
 
-          <hr>
+          <template v-if="editingNewContact">
+            <button class="contact-editor__btn" @click="createContact">Create</button>
+            <button class="contact-editor__btn" @click="cancelEdit">Cancel</button>
+          </template>
+          <template v-else>
+            <button class="contact-editor__btn" @click="updateContact">Update</button>
+            <button class="contact-editor__btn" @click="deleteContact">Delete</button>
+          </template>
 
-          <button class="contact-editor__btn" @click="syncContact">Save</button>
-          <button class="contact-editor__btn" @click="deleteContact">Delete</button>
         </div>
       </transition>
 
@@ -87,6 +92,10 @@ export default {
     }
   },
   methods: {
+    editContact (contact) {
+      this.selectedContact = contact
+      this.editingNewContact = false
+    },
     addEmail () {
       this.selectedContact.emails.push('')
     },
@@ -108,27 +117,30 @@ export default {
       this.editingNewContact = true
       this.selectedContact = newContact
     },
-    syncContact () {
-      if (this.editingNewContact) {
-        backend.createContact(this.selectedContact)
-          .then(({data}) => {
-            this.contacts.push(data.contact)
-            this.selectedContact = null
-          })
-      } else {
-        backend.updateContact(this.selectedContact)
-          .then( () => {
-            this.selectedContact = null
-          })
-      }
+    cancelEdit () {
+      this.selectedContact = null
+      this.editingNewContact = false
+    },
+    createContact () {
+      backend.createContact(this.selectedContact)
+        .then(({data}) => {
+          this.contacts.push(data.contact)
+          this.cancelEdit()
+        })
+    },
+    updateContact () {
+      backend.updateContact(this.selectedContact)
+        .then(() => {
+          this.cancelEdit()
+        })
     },
     deleteContact () {
-      backend.deleteContact(this.selectedContact).
-        then( () => {
+      backend.deleteContact(this.selectedContact)
+        .then(() => {
           this.contacts = this.contacts.filter(c => {
-            return c.id != this.selectedContact.id
+            return c.id !== this.selectedContact.id
           })
-          this.selectedContact = null
+          this.cancelEdit()
         })
     }
   },
