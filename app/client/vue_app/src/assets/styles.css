@@ -2,8 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  background: aliceblue;
+}
+
 .contact-editor {
-  @apply .w-2/3 .border .p-1;
+  @apply .w-2/3 .border .p-1 .overflow-hidden;
 }
 
 .contact-editor__input {
@@ -11,15 +15,23 @@
 }
 
 .contact-editor__btn {
-  @apply .font-bold .p-1 .rounded .border .mr-1;
+  @apply .font-bold .p-1 .rounded .border .mr-1 .shadow;
 }
 
 .contact-editor__btn--add-data {
-  @apply .text-white .bg-blue;
+  @apply .text-black .bg-grey-lighter;
 }
 
 .contact-editor__btn--add-data:hover {
-  @apply .bg-blue-dark;
+  @apply .bg-grey-light;
+}
+
+.contact-editor__btn--save {
+  @apply .text-white .bg-green;
+}
+
+.contact-editor__btn--save:hover {
+  @apply .bg-green-dark;
 }
 
 .contact-editor__btn--delete {
@@ -54,11 +66,19 @@
   @apply .border p-8;
 }
 
+.contact-list__add-contact-btn {
+  @apply .font-bold .p-1 .rounded .border .mt-1 .text-black .bg-grey-lighter;
+}
+
+.contact-list__add-contact-btn:hover {
+  @apply .bg-grey-light;
+}
+
 .contact-list__contact:hover {
   @apply .bg-blue-lighter .cursor-pointer;
 }
 
-.expand-enter, .expand-leave {
+.expand-enter, .expand-leave-to {
   width: 0;
 }
 

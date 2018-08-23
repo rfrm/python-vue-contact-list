@@ -1,12 +1,12 @@
 <template>
-  <div class="max-w-lg mx-auto rounded h-screen">
+  <div class="max-w-lg mx-auto h-screen bg-white px-8 pt-8 shadow-lg">
     <div class="flex">
 
       <ul class="contact-list">
         <li class="contact-list__contact" @click="editContact(contact)" v-for="contact in sortedContacts" :key="contact.id">
           <p> {{ contact.firstname }} {{ contact.lastname }} </p>
         </li>
-        <button class="contact-editor__btn" @click="editNewContact">Add contact</button>
+        <button class="contact-list__add-contact-btn" @click="editNewContact">Add contact</button>
       </ul>
 
       <transition name="expand">
@@ -68,12 +68,12 @@
           </div>
 
           <template v-if="editingNewContact">
-            <button class="contact-editor__btn" @click="createContact">Create</button>
-            <button class="contact-editor__btn" @click="cancelEdit">Cancel</button>
+            <button class="contact-editor__btn contact-editor__btn--save" @click="createContact">Create</button>
+            <button class="contact-editor__btn contact-editor__btn--delete" @click="cancelEdit">Cancel</button>
           </template>
           <template v-else>
-            <button class="contact-editor__btn" @click="updateContact">Update</button>
-            <button class="contact-editor__btn" @click="deleteContact">Delete</button>
+            <button class="contact-editor__btn contact-editor__btn--save" @click="updateContact">Update</button>
+            <button class="contact-editor__btn contact-editor__btn--delete" @click="deleteContact">Delete</button>
           </template>
 
         </div>
