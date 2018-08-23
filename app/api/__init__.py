@@ -13,6 +13,7 @@ api_rest = Api(api_bp)
 @api_bp.after_request
 def add_header(response):
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS, PUT, DELETE"
 
     # Required for Webpack dev application to make  requests to flask api
     # from another host (localhost:8080)

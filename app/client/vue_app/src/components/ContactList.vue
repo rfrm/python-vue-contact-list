@@ -28,10 +28,10 @@
 
           <div class="contact-editor__data-section">
             <h4>Phone numbers</h4>
-            <div class="flex mb-1" v-for="(phoneNumber, index) in selectedContact.phoneNumbers" :key="`phone-number-${index}`">
-              <input class="contact-editor__input w-1/3 mr-1" :placeholder="`Phone ${index+1}`" v-model="selectedContact.phoneNumbers[index].number" />
+            <div class="flex mb-1" v-for="(phoneNumber, index) in selectedContact.phone_numbers" :key="`phone-number-${index}`">
+              <input class="contact-editor__input w-1/3 mr-1" :placeholder="`Phone ${index+1}`" v-model="selectedContact.phone_numbers[index].phone_number" />
               <div class="relative w-1/3 mr-1">
-                <select class="contact-editor__phone-number__type-select" v-model="selectedContact.phoneNumbers[index].type">
+                <select class="contact-editor__phone-number__type-select" v-model="selectedContact.phone_numbers[index].phone_type">
                   <option>Personal</option>
                   <option>Work</option>
                   <option>Home</option>
@@ -40,7 +40,7 @@
                   <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
                 </div>
               </div>
-              <button class="contact-editor__btn contact-editor__btn--delete" v-if="phoneNumberCount > 1" @click="selectedContact.phoneNumbers.splice(index, 1)">delete</button>
+              <button class="contact-editor__btn contact-editor__btn--delete" v-if="phoneNumberCount > 1" @click="selectedContact.phone_numbers.splice(index, 1)">delete</button>
             </div>
             <button class="contact-editor__btn contact-editor__btn--add-data" @click="addPhoneNumber">Add phone</button>
           </div>
@@ -57,6 +57,7 @@
           <hr>
 
           <button class="contact-editor__btn" @click="syncContact">Save</button>
+          <button class="contact-editor__btn" @click="deleteContact">Delete</button>
         </div>
       </transition>
 
@@ -66,39 +67,23 @@
 
 <script>
 import Datepicker from 'vuejs-datepicker'
+import backend from '../backend'
 
 export default {
   components: {
     Datepicker
   },
+  created () {
+    backend.getContacts()
+      .then(({data}) => {
+        this.contacts = data.contacts
+      })
+  },
   data () {
     return {
-      editingNewContact: false,
+      contacts: [],
       selectedContact: null,
-      contacts: [
-        { id: 1,
-          firstname: 'Robinson',
-          lastname: 'Rodriguez',
-          birthdate: null,
-          emails: [''],
-          addresses: [],
-          phoneNumbers: [
-            { number: '123456', type: 'Home' },
-            { number: '12131', type: 'Work' }
-          ]
-        },
-        { id: 2,
-          firstname: 'Naveed',
-          lastname: 'Ahmed',
-          birthdate: null,
-          emails: [''],
-          addresses: [],
-          phoneNumbers: [
-            { number: '12', type: 'Personal' },
-            { number: '1256', type: 'Home' }
-          ]
-        }
-      ]
+      editingNewContact: false
     }
   },
   methods: {
@@ -109,7 +94,7 @@ export default {
       this.selectedContact.addresses.push('')
     },
     addPhoneNumber () {
-      this.selectedContact.phoneNumbers.push({number: '', type: ''})
+      this.selectedContact.phone_numbers.push({phone_number: '', phone_type: ''})
     },
     editNewContact () {
       const newContact = {
@@ -118,12 +103,33 @@ export default {
         birthdate: null,
         emails: [''],
         addresses: [],
-        phoneNumbers: []
+        phone_numbers: []
       }
       this.editingNewContact = true
       this.selectedContact = newContact
     },
     syncContact () {
+      if (this.editingNewContact) {
+        backend.createContact(this.selectedContact)
+          .then(({data}) => {
+            this.contacts.push(data.contact)
+            this.selectedContact = null
+          })
+      } else {
+        backend.updateContact(this.selectedContact)
+          .then( () => {
+            this.selectedContact = null
+          })
+      }
+    },
+    deleteContact () {
+      backend.deleteContact(this.selectedContact).
+        then( () => {
+          this.contacts = this.contacts.filter(c => {
+            return c.id != this.selectedContact.id
+          })
+          this.selectedContact = null
+        })
     }
   },
   computed: {
@@ -131,7 +137,7 @@ export default {
       return this.selectedContact.emails.length
     },
     phoneNumberCount () {
-      return this.selectedContact.phoneNumbers.length
+      return this.selectedContact.phone_numbers.length
     },
     sortedContacts () {
       return this.contacts.slice(0).sort((c1, c2) => {

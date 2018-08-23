@@ -54,10 +54,10 @@
   @apply .bg-blue-lighter;
 }
 
-.expand-enter {
+.expand-enter, .expand-leave {
   width: 0;
 }
 
-.expand-enter-active {
+.expand-enter-active, .expand-leave-active {
   transition: width 0.3s;
 }
